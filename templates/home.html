@@ -5,6 +5,12 @@
 </head>
 <body>
     <h1>Welcome {{ username }}</h1>
+    <form method="post" action="/add">
+        <input type="text" name="category" placeholder="Category">
+        <input type="number" name="amount" placeholder="Amount">
+        <button type="submit">Add</button>
+    </form>
+        
     <h2>Your Expenses</h2>
     <ul>
         {% for expense in expenses %}
