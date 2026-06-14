@@ -17,13 +17,15 @@ def init_db():
 init_db()
 @app.route('/')
 @app.route("/")
+@app.route("/")
 def home():
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id, category, amount FROM expenses")
     expenses = cursor.fetchall()
+    total = sum(expense[2] for expense in expenses)
     conn.close()
-    return render_template("home.html", username="Abel", expenses=expenses)
+    return render_template("home.html", username="Abel", expenses=expenses, total=total)
 @app.route('/add',methods=['POST'])
 @app.route("/add", methods=["POST"])
 def add_expense():
