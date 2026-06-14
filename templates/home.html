@@ -14,8 +14,11 @@
     <h2>Your Expenses</h2>
     <ul>
         {% for expense in expenses %}
-            <li>{{ expense[1] }} - ₹{{ expense[2] }}</li>
-        {% endfor %}
+           <li>
+              {{ expense[1] }} - ₹{{ expense[2] }}
+              <a href="/delete/{{ expense[0] }}">Delete</a>
+            </li>
+         {% endfor %}
     </ul>
     <p>Your expenses will appear here.</p>
 </body>
