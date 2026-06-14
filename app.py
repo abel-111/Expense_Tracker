@@ -35,6 +35,25 @@ def add_expense():
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
+@app.route("/edit/<int:id>")
+def edit_expense(id):
+    conn = sqlite3.connect("expenses.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, category, amount FROM expenses WHERE id = ?", (id,))
+    expense = cursor.fetchone()
+    conn.close()
+    return render_template("edit.html", expense=expense)
+
+@app.route("/edit/<int:id>", methods=["POST"])
+def update_expense(id):
+    category = request.form["category"]
+    amount = request.form["amount"]
+    conn = sqlite3.connect("expenses.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE expenses SET category = ?, amount = ? WHERE id = ?", (category, amount, id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for("home"))
 @app.route("/delete/<int:id>")
 def delete_expense(id):
     conn = sqlite3.connect("expenses.db")

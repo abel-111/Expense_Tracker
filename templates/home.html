@@ -16,6 +16,7 @@
         {% for expense in expenses %}
            <li>
               {{ expense[1] }} - ₹{{ expense[2] }}
+              <a href="/edit/{{ expense[0] }}">Edit</a>
               <a href="/delete/{{ expense[0] }}">Delete</a>
             </li>
          {% endfor %}

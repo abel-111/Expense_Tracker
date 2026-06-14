@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Expense</title>
+</head>
+<body>
+    <h1>Edit Expense</h1>
+    <form method="POST" action="/edit/{{ expense[0] }}">
+        <input type="text" name="category" value="{{ expense[1] }}">
+        <input type="number" name="amount" value="{{ expense[2] }}">
+        <button type="submit">Update</button>
+    </form>
+    <a href="/">Cancel</a>
+</body>
+</html>
