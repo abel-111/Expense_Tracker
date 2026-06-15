@@ -8,6 +8,7 @@
     <form method="post" action="/add">
         <input type="text" name="category" placeholder="Category">
         <input type="number" name="amount" placeholder="Amount">
+        <input type="date" name="date">
         <button type="submit">Add</button>
     </form>
         
@@ -15,13 +16,12 @@
     <ul>
         {% for expense in expenses %}
            <li>
-              {{ expense[1] }} - ₹{{ expense[2] }}
+              {{ expense[1] }} - ₹{{ expense[2] }} {{ expense[3] }}
               <a href="/edit/{{ expense[0] }}">Edit</a>
               <a href="/delete/{{ expense[0] }}">Delete</a>
             </li>
          {% endfor %}
     </ul>
     <p>Total: ₹{{ total }}</p>
-    <p>Your expenses will appear here.</p>
 </body>
 </html>

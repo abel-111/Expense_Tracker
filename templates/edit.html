@@ -8,6 +8,7 @@
     <form method="POST" action="/edit/{{ expense[0] }}">
         <input type="text" name="category" value="{{ expense[1] }}">
         <input type="number" name="amount" value="{{ expense[2] }}">
+        <input type="date" name="date" value="{{ expense[3] }}">
         <button type="submit">Update</button>
     </form>
     <a href="/">Cancel</a>
