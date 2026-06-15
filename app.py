@@ -8,32 +8,31 @@ def init_db():
         CREATE TABLE IF NOT EXISTS expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             category TEXT,
-            amount REAL
+            amount REAL,
+            date TEXT DEFAULT (DATE('now'))
         )
     """)
     conn.commit()
     conn.close()
 
 init_db()
-@app.route('/')
-@app.route("/")
 @app.route("/")
 def home():
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT id, category, amount FROM expenses")
+    cursor.execute("SELECT id, category, amount,date FROM expenses")
     expenses = cursor.fetchall()
     total = sum(expense[2] for expense in expenses)
     conn.close()
     return render_template("home.html", username="Abel", expenses=expenses, total=total)
 @app.route('/add',methods=['POST'])
-@app.route("/add", methods=["POST"])
 def add_expense():
     category = request.form["category"]
     amount = request.form["amount"]
+    date = request.form["date"]
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO expenses (category, amount) VALUES (?, ?)", (category, amount))
+    cursor.execute("INSERT INTO expenses (category, amount,date) VALUES (?, ?, ?)", (category, amount,date))
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
@@ -41,7 +40,7 @@ def add_expense():
 def edit_expense(id):
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT id, category, amount FROM expenses WHERE id = ?", (id,))
+    cursor.execute("SELECT id, category, amount, date FROM expenses WHERE id = ?", (id,))
     expense = cursor.fetchone()
     conn.close()
     return render_template("edit.html", expense=expense)
@@ -50,9 +49,10 @@ def edit_expense(id):
 def update_expense(id):
     category = request.form["category"]
     amount = request.form["amount"]
+    date = request.form["date"]
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("UPDATE expenses SET category = ?, amount = ? WHERE id = ?", (category, amount, id))
+    cursor.execute("UPDATE expenses SET category = ?, amount = ?, date = ? WHERE id = ?", (category, amount, date, id))
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
