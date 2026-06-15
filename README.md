@@ -9,6 +9,11 @@ A web application built with Python and Flask to track personal expenses.
 - Edit existing expenses
 - Delete expenses
 - View total spending
+- Add expenses with category and amount and date
+- View all expenses with date in the list
+- Edit existing expenses including date
+- Delete expenses
+- View total spending
 
 ## Technologies Used
 
@@ -44,7 +49,6 @@ expense-tracker/
 ## Status
 
 In progress. Future features planned:
-- Date field for expenses
 - Bootstrap styling
 - User authentication (login/register)
 - Expense filtering
