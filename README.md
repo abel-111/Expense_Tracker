@@ -4,14 +4,12 @@ A web application built with Python and Flask to track personal expenses.
 
 ## Current Features
 
-- Add expenses with category and amount
+- User registration with hashed passwords
+- User login and logout with session management
+- Each user sees only their own expenses
+- Add expenses with category, amount, and date
 - View all expenses in a list
 - Edit existing expenses
-- Delete expenses
-- View total spending
-- Add expenses with category and amount and date
-- View all expenses with date in the list
-- Edit existing expenses including date
 - Delete expenses
 - View total spending
 
@@ -21,6 +19,7 @@ A web application built with Python and Flask to track personal expenses.
 - Flask 3.1.3
 - SQLite (built-in Python library)
 - Jinja2 (Flask templating)
+- Werkzeug (password hashing)
 - HTML
 
 ## Project Structure
@@ -30,6 +29,8 @@ expense-tracker/
 ├── expenses.db
 └── templates/
     ├── home.html
+    ├── login.html
+    ├── register.html
     └── edit.html
 
 ## How to Run
@@ -50,7 +51,6 @@ expense-tracker/
 
 In progress. Future features planned:
 - Bootstrap styling
-- User authentication (login/register)
 - Expense filtering
 - Monthly totals
-- CSV export# Expense_Tracker
+- CSV export
