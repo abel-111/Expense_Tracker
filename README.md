@@ -1,56 +1,155 @@
-# Expense Tracker
+# Expense Tracker Web Application
 
-A web application built with Python and Flask to track personal expenses.
+A simple Expense Tracker web application built using Python, Flask, SQLite, and HTML. This project allows users to securely manage their personal expenses with authentication and full CRUD functionality.
 
-## Current Features
+---
 
-- User registration with hashed passwords
-- User login and logout with session management
-- Each user sees only their own expenses
-- Add expenses with category, amount, and date
-- View all expenses in a list
+## Features
+
+### User Authentication
+- User Registration
+- User Login
+- User Logout
+- Password Hashing using Werkzeug
+- Session Management using Flask Sessions
+
+### Expense Management
+- Add new expenses
+- View all expenses
 - Edit existing expenses
 - Delete expenses
-- View total spending
+- Calculate total spending automatically
+
+### Data Validation
+- Validates amount input
+- Prevents empty category and date fields
+- Displays user-friendly error messages using Flask Flash Messages
+
+### User-Specific Data
+- Each user can only view and manage their own expenses
+- Expenses are linked to registered user accounts
+
+---
 
 ## Technologies Used
 
-- Python 3.14
-- Flask 3.1.3
-- SQLite (built-in Python library)
-- Jinja2 (Flask templating)
-- Werkzeug (password hashing)
+- Python 3
+- Flask
+- SQLite3
 - HTML
+- Jinja2 Templates
+- Werkzeug Security
+
+---
 
 ## Project Structure
 
+```
 expense-tracker/
+│
 ├── app.py
 ├── expenses.db
+│
 └── templates/
     ├── home.html
     ├── login.html
     ├── register.html
     └── edit.html
+```
 
-## How to Run
+---
 
-1. Clone the repository
-   git clone <your-repo-url>
+## Database Design
 
-2. Install Flask
-   pip install flask
+### Users Table
 
-3. Run the app
-   python app.py
+| Column | Type |
+|----------|----------|
+| id | Integer (Primary Key) |
+| username | Text (Unique) |
+| password | Text (Hashed) |
 
-4. Open browser and visit
-   http://127.0.0.1:5000
+### Expenses Table
 
-## Status
+| Column | Type |
+|----------|----------|
+| id | Integer (Primary Key) |
+| user_id | Integer (Foreign Key) |
+| category | Text |
+| amount | Real |
+| date | Text |
 
-In progress. Future features planned:
-- Bootstrap styling
-- Expense filtering
-- Monthly totals
-- CSV export
+---
+
+## Installation
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/abel-111/expense-tracker.git
+cd expense-tracker
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install flask werkzeug
+```
+
+### 3. Run Application
+
+```bash
+python app.py
+```
+
+### 4. Open Browser
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## Screens Included
+
+- Register Page
+- Login Page
+- Home Dashboard
+- Add Expense Form
+- Edit Expense Page
+- Expense List with Total Spending
+
+---
+
+## Learning Outcomes
+
+Through this project I learned:
+
+- Flask Routing
+- Flask Templates (Jinja2)
+- Session Management
+- User Authentication
+- Password Hashing
+- SQLite Database Operations
+- CRUD Operations
+- Form Handling
+- Input Validation
+- Database Relationships
+
+---
+
+## Future Improvements
+
+- Bootstrap UI Design
+- Expense Categories Chart
+- Monthly Expense Summary
+- Expense Search and Filter
+- CSV Export
+- User Profile Page
+- Dark Mode
+
+---
+
+## Author
+
+GitHub: https://github.com/abel-111
