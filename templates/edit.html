@@ -5,6 +5,13 @@
 </head>
 <body>
     <h1>Edit Expense</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <form method="POST" action="/edit/{{ expense[0] }}">
         <input type="text" name="category" value="{{ expense[1] }}">
         <input type="number" name="amount" value="{{ expense[2] }}">
