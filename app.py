@@ -1,8 +1,7 @@
 import sqlite3
-from flask import Flask,render_template,request,redirect,url_for
+from flask import Flask,render_template,request,redirect,url_for, session, flash
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask import session
-
 app = Flask(__name__)
 app.secret_key = "replace-this-with-something-random"  # needed for sessions to work
 def init_db():
@@ -58,14 +57,28 @@ def login():
             return render_template("login.html", error="Invalid username or password")
 
     return render_template("login.html")
-@app.route('/add',methods=['POST'])
+@app.route('/add', methods=['POST'])
 def add_expense():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
     category = request.form["category"]
     amount = request.form["amount"]
     date = request.form["date"]
+
+    try:
+        amount = float(amount)
+    except ValueError:
+        flash("Amount must be a valid number.")
+        return redirect(url_for("home"))
+
+    if not category or not date:
+        flash("Category and date are required.")
+        return redirect(url_for("home"))
+
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO expenses (user_id, category, amount, date) VALUES (?, ?, ?, ?)",(session["user_id"], category, amount, date))
+    cursor.execute("INSERT INTO expenses (user_id, category, amount, date) VALUES (?, ?, ?, ?)", (session["user_id"], category, amount, date))
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
@@ -108,12 +121,27 @@ def edit_expense(id):
 def update_expense(id):
     if "user_id" not in session:
         return redirect(url_for("login"))
+
     category = request.form["category"]
     amount = request.form["amount"]
     date = request.form["date"]
+
+    try:
+        amount = float(amount)
+    except ValueError:
+        flash("Amount must be a valid number.")
+        return redirect(url_for("home"))
+
+    if not category or not date:
+        flash("Category and date are required.")
+        return redirect(url_for("home"))
+
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("UPDATE expenses SET category = ?, amount = ?, date = ? WHERE id = ? AND user_id = ?", (category, amount, date, id, session["user_id"]))
+    cursor.execute(
+        "UPDATE expenses SET category = ?, amount = ?, date = ? WHERE id = ? AND user_id = ?",
+        (category, amount, date, id, session["user_id"])
+    )
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
