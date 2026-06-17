@@ -93,29 +93,37 @@ def register():
     return render_template("register.html")
 @app.route("/edit/<int:id>")
 def edit_expense(id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT id, category, amount, date FROM expenses WHERE id = ?", (id,))
+    cursor.execute("SELECT id, category, amount, date FROM expenses WHERE id = ? AND user_id = ?", (id, session["user_id"]))
     expense = cursor.fetchone()
     conn.close()
+    if expense is None:
+        return redirect(url_for("home"))
     return render_template("edit.html", expense=expense)
 
 @app.route("/edit/<int:id>", methods=["POST"])
 def update_expense(id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
     category = request.form["category"]
     amount = request.form["amount"]
     date = request.form["date"]
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("UPDATE expenses SET category = ?, amount = ?, date = ? WHERE id = ?", (category, amount, date, id))
+    cursor.execute("UPDATE expenses SET category = ?, amount = ?, date = ? WHERE id = ? AND user_id = ?", (category, amount, date, id, session["user_id"]))
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
 @app.route("/delete/<int:id>")
 def delete_expense(id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM expenses WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM expenses WHERE id = ? AND user_id = ?", (id, session["user_id"]))
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
