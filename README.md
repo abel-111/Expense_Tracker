@@ -29,6 +29,19 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Each user can only view and manage their own expenses
 - Expenses are linked to registered user accounts
 
+### User Interface
+
+- Responsive Bootstrap 5 design
+- Shared base template using Jinja2 inheritance
+- Navigation bar with authentication controls
+- Bootstrap flash message alerts
+
+### Expense Analytics
+
+- Spending breakdown chart using Chart.js
+- Category-wise expense visualization
+- Automatic total expense calculation
+
 ---
 
 ## Technologies Used
@@ -36,7 +49,9 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Python 3
 - Flask
 - SQLite3
-- HTML
+- HTML5
+- Bootstrap 5
+- Chart.js
 - Jinja2 Templates
 - Werkzeug Security
 
@@ -51,6 +66,7 @@ expense-tracker/
 ├── expenses.db
 │
 └── templates/
+    ├── base.html
     ├── home.html
     ├── login.html
     ├── register.html
@@ -140,13 +156,14 @@ Through this project I learned:
 
 ## Future Improvements
 
-- Bootstrap UI Design
-- Expense Categories Chart
-- Monthly Expense Summary
-- Expense Search and Filter
-- CSV Export
-- User Profile Page
-- Dark Mode
+## Future Improvements
+
+- Monthly expense reports
+- Expense search and filtering
+- CSV export functionality
+- User profile management
+- Dark mode support
+- Budget tracking and alerts
 
 ---
 
