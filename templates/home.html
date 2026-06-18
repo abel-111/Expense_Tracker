@@ -1,35 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Expense Tracker</title>
-</head>
-<body>
-    <h1>Welcome {{ username }}</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: red;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <a href="/logout">Logout</a>
-    <form method="post" action="/add">
-        <input type="text" name="category" placeholder="Category">
-        <input type="number" name="amount" placeholder="Amount">
-        <input type="date" name="date">
-        <button type="submit">Add</button>
-    </form>
-        
-    <h2>Your Expenses</h2>
-    <ul>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 class="mb-4">Welcome, {{ session.username }}</h1>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Add Expense</h5>
+        <form method="post" action="/add" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <input type="text" name="category" class="form-control" placeholder="Category">
+            </div>
+            <div class="col-md-3">
+                <input type="number" name="amount" class="form-control" placeholder="Amount" step="0.01">
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="date" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h2 class="mb-3">Your Expenses</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
         {% for expense in expenses %}
-           <li>
-              {{ expense[1] }} - ₹{{ expense[2] }} {{ expense[3] }}
-              <a href="/edit/{{ expense[0] }}">Edit</a>
-              <a href="/delete/{{ expense[0] }}">Delete</a>
-            </li>
-         {% endfor %}
-    </ul>
-    <p>Total: ₹{{ total }}</p>
-</body>
-</html>
+        <tr>
+            <td>{{ expense[1] }}</td>
+            <td>₹{{ expense[2] }}</td>
+            <td>{{ expense[3] }}</td>
+            <td>
+                <a href="/edit/{{ expense[0] }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <a href="/delete/{{ expense[0] }}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h4>Total: ₹{{ total }}</h4>
+{% endblock %}
