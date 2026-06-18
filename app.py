@@ -1,9 +1,10 @@
 import sqlite3
+import os
 from flask import Flask,render_template,request,redirect,url_for, session, flash
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask import session
 app = Flask(__name__)
-app.secret_key = "replace-this-with-something-random"  # needed for sessions to work
+app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24).hex())  # needed for sessions to work
 def init_db():
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
@@ -32,7 +33,10 @@ def home():
         return redirect(url_for("login"))
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT id, category, amount, date FROM expenses WHERE user_id = ?", (session["user_id"],))
+    cursor.execute(
+    "SELECT id, category, amount, date FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
+    (session["user_id"],)
+)
     expenses = cursor.fetchall()
     total = sum(expense[2] for expense in expenses)
     conn.close()
@@ -40,8 +44,11 @@ def home():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
+        username = request.form["username"].strip()
         password = request.form["password"]
+
+        if not username or not password:
+            return render_template("login.html", error="Username and password are required.")
 
         conn = sqlite3.connect("expenses.db")
         cursor = conn.cursor()
@@ -85,8 +92,12 @@ def add_expense():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form["username"]
+        username = request.form["username"].strip()
         password = request.form["password"]
+
+        if not username or not password:
+            return render_template("register.html", error="Username and password are required.")
+
         hashed_password = generate_password_hash(password)
 
         conn = sqlite3.connect("expenses.db")
