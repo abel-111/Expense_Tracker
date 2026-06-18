@@ -1,23 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Expense</title>
-</head>
-<body>
-    <h1>Edit Expense</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: red;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <form method="POST" action="/edit/{{ expense[0] }}">
-        <input type="text" name="category" value="{{ expense[1] }}">
-        <input type="number" name="amount" value="{{ expense[2] }}">
-        <input type="date" name="date" value="{{ expense[3] }}">
-        <button type="submit">Update</button>
-    </form>
-    <a href="/">Cancel</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Edit Expense{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h1 class="mb-4">Edit Expense</h1>
+        <form method="POST" action="/edit/{{ expense[0] }}">
+            <div class="mb-3">
+                <input type="text" name="category" value="{{ expense[1] }}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="number" name="amount" value="{{ expense[2] }}" class="form-control" step="0.01">
+            </div>
+            <div class="mb-3">
+                <input type="date" name="date" value="{{ expense[3] }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="/" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
