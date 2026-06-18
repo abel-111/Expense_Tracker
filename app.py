@@ -34,13 +34,30 @@ def home():
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
     cursor.execute(
-    "SELECT id, category, amount, date FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
-    (session["user_id"],)
-)
+        "SELECT id, category, amount, date FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
+        (session["user_id"],)
+    )
     expenses = cursor.fetchall()
     total = sum(expense[2] for expense in expenses)
+
+    cursor.execute(
+        "SELECT category, SUM(amount) FROM expenses WHERE user_id = ? GROUP BY category",
+        (session["user_id"],)
+    )
+    category_totals = cursor.fetchall()
     conn.close()
-    return render_template("home.html", username=session["username"], expenses=expenses, total=total)
+
+    chart_labels = [row[0] for row in category_totals]
+    chart_values = [row[1] for row in category_totals]
+
+    return render_template(
+        "home.html",
+        username=session["username"],
+        expenses=expenses,
+        total=total,
+        chart_labels=chart_labels,
+        chart_values=chart_values
+    )
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
