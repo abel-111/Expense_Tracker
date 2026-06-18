@@ -23,6 +23,17 @@
     </div>
 </div>
 
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Spending by Category</h5>
+        {% if chart_labels %}
+            <canvas id="categoryChart" style="max-height: 300px;"></canvas>
+        {% else %}
+            <p class="text-muted">Add some expenses to see your spending breakdown.</p>
+        {% endif %}
+    </div>
+</div>
+
 <h2 class="mb-3">Your Expenses</h2>
 <table class="table table-striped">
     <thead>
@@ -48,4 +59,27 @@
     </tbody>
 </table>
 <h4>Total: ₹{{ total }}</h4>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('categoryChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ chart_labels | tojson }},
+                datasets: [{
+                    data: {{ chart_values | tojson }},
+                    backgroundColor: ['#0d6efd', '#6610f2', '#198754', '#fd7e14', '#dc3545', '#20c997', '#6f42c1', '#ffc107']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+</script>
 {% endblock %}
