@@ -52,7 +52,9 @@
             <td>{{ expense[3] }}</td>
             <td>
                 <a href="/edit/{{ expense[0] }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                <a href="/delete/{{ expense[0] }}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <form method="POST" action="/delete/{{ expense[0] }}" class="d-inline" onsubmit="return confirm('Delete this expense?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
             </td>
         </tr>
         {% endfor %}

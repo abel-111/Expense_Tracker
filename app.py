@@ -125,6 +125,7 @@ def register():
                 (username, hashed_password)
             )
             conn.commit()
+            flash("Account created! Please log in.", "success")
         except sqlite3.IntegrityError:
             conn.close()
             return render_template("register.html", error="Username already taken")
@@ -173,7 +174,7 @@ def update_expense(id):
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
-@app.route("/delete/<int:id>")
+@app.route("/delete/<int:id>", methods=["POST"])
 def delete_expense(id):
     if "user_id" not in session:
         return redirect(url_for("login"))
@@ -187,4 +188,5 @@ def delete_expense(id):
 def logout():
     session.clear()
     return redirect(url_for("login"))
-if __name__ == '__main__':    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -41,6 +41,7 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Spending breakdown chart using Chart.js
 - Category-wise expense visualization
 - Automatic total expense calculation
+- Delete confirmation prompt before removing an expense
 
 ---
 
@@ -54,6 +55,7 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Chart.js
 - Jinja2 Templates
 - Werkzeug Security
+- pytest (automated testing)
 
 ---
 
@@ -96,6 +98,18 @@ expense-tracker/
 | date | Text |
 
 ---
+## Testing
+
+Basic automated tests are included using `pytest`.
+
+### Run tests
+```bash
+python -m pytest test_app.py -v
+```
+
+Current coverage:
+- Login page loads correctly
+- Duplicate username registration is rejected
 
 ## Installation
 
@@ -164,6 +178,8 @@ Through this project I learned:
 - User profile management
 - Dark mode support
 - Budget tracking and alerts
+- CSRF protection on forms
+- Expanded automated test coverage (login failure, IDOR protection, edit/delete ownership checks)
 
 ---
 
