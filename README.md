@@ -56,7 +56,8 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Jinja2 Templates
 - Werkzeug Security
 - pytest (automated testing)
-
+- python-dotenv (environment variable management)
+- Gunicorn (production WSGI server)
 ---
 
 ## Project Structure
@@ -123,20 +124,39 @@ cd expense-tracker
 ### 2. Install Dependencies
 
 ```bash
-pip install flask werkzeug
+pip install -r requirements.txt
 ```
 
-### 3. Run Application
+### 3. Set up environment variables
+
+Create a `.env` file in the project root with a secret key:
+
+```bash
+SECRET_KEY=your_random_secret_key_here
+```
+
+You can generate one with:
+
+```bash
+python -c "import secrets; print(secrets.token_hex(24))"
+```
+
+### 4. Run Application
 
 ```bash
 python app.py
 ```
 
-### 4. Open Browser
+### 5. Open Browser
 
 ```
 http://127.0.0.1:5000
 ```
+
+---
+## Live Demo
+
+🔗 [View live app](https://expense-tracker-p6bl.onrender.com/) *(hosted on Render free tier — first load may take 20–30 seconds if the app has been idle)*
 
 ---
 
@@ -170,8 +190,6 @@ Through this project I learned:
 
 ## Future Improvements
 
-## Future Improvements
-
 - Monthly expense reports
 - Expense search and filtering
 - CSV export functionality
@@ -180,6 +198,7 @@ Through this project I learned:
 - Budget tracking and alerts
 - CSRF protection on forms
 - Expanded automated test coverage (login failure, IDOR protection, edit/delete ownership checks)
+- Persistent database (PostgreSQL) so data survives free-tier restarts
 
 ---
 
