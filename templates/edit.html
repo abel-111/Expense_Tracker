@@ -5,6 +5,7 @@
     <div class="col-md-6">
         <h1 class="mb-4">Edit Expense</h1>
         <form method="POST" action="/edit/{{ expense[0] }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
                 <input type="text" name="category" value="{{ expense[1] }}" class="form-control">
             </div>
