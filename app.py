@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask,render_template,request,redirect,url_for, session, flash
 from werkzeug.security import generate_password_hash,check_password_hash
+from flask_wtf import CSRFProtect
 from flask import session
 load_dotenv()
 
@@ -10,6 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 if not app.secret_key:
     raise RuntimeError("SECRET_KEY is not set. Did you create a .env file?")
+csrf = CSRFProtect(app)
 def init_db():
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
