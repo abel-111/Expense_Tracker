@@ -7,6 +7,7 @@
     <div class="card-body">
         <h5 class="card-title">Add Expense</h5>
         <form method="post" action="/add" class="row g-2 align-items-end">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="col-md-4">
                 <input type="text" name="category" class="form-control" placeholder="Category">
             </div>
@@ -53,6 +54,7 @@
             <td>
                 <a href="/edit/{{ expense[0] }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                 <form method="POST" action="/delete/{{ expense[0] }}" class="d-inline" onsubmit="return confirm('Delete this expense?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                 </form>
             </td>
