@@ -196,7 +196,6 @@ Through this project I learned:
 - User profile management
 - Dark mode support
 - Budget tracking and alerts
-- CSRF protection on forms
 - Expanded automated test coverage (login failure, IDOR protection, edit/delete ownership checks)
 - Persistent database (PostgreSQL) so data survives free-tier restarts
 
