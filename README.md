@@ -35,6 +35,7 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Shared base template using Jinja2 inheritance
 - Navigation bar with authentication controls
 - Bootstrap flash message alerts
+- Dark mode toggle with ripple animation and localStorage persistence
 
 ### Expense Analytics
 
@@ -194,7 +195,6 @@ Through this project I learned:
 - Expense search and filtering
 - CSV export functionality
 - User profile management
-- Dark mode support
 - Budget tracking and alerts
 - Expanded automated test coverage (login failure, IDOR protection, edit/delete ownership checks)
 - Persistent database (PostgreSQL) so data survives free-tier restarts
