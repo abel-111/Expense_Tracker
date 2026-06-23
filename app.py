@@ -29,6 +29,10 @@ def init_db():
             date TEXT DEFAULT (DATE('now'))
         )
     """)
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN budget REAL DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass
 
     conn.commit()
     conn.close()
@@ -52,18 +56,31 @@ def home():
         (session["user_id"],)
     )
     category_totals = cursor.fetchall()
-    conn.close()
+    
+    cursor.execute(
+        """SELECT SUM(amount) FROM expenses
+        WHERE user_id = ? AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')""",
+        (session["user_id"],)
+    )
+    monthly_row = cursor.fetchone()
+    monthly_total = monthly_row[0] if monthly_row[0] else 0
 
+    cursor.execute("SELECT budget FROM users WHERE id = ?", (session["user_id"],))
+    budget_row = cursor.fetchone()
+    budget = budget_row[0] if budget_row and budget_row[0] else 0
+    conn.close()
     chart_labels = [row[0] for row in category_totals]
     chart_values = [row[1] for row in category_totals]
 
     return render_template(
-        "home.html",
-        username=session["username"],
-        expenses=expenses,
-        total=total,
-        chart_labels=chart_labels,
-        chart_values=chart_values
+    "home.html",
+    username=session["username"],
+    expenses=expenses,
+    total=total,
+    chart_labels=chart_labels,
+    chart_values=chart_values,
+    monthly_total=monthly_total,
+    budget=budget
     )
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -195,6 +212,39 @@ def delete_expense(id):
 def logout():
     session.clear()
     return redirect(url_for("login"))
+@app.route("/settings", methods=["GET", "POST"])
+def settings():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    conn = sqlite3.connect("expenses.db")
+    cursor = conn.cursor()
+
+    if request.method == "POST":
+        budget = request.form["budget"]
+        try:
+            budget = float(budget)
+            if budget < 0:
+                raise ValueError
+        except ValueError:
+            conn.close()
+            flash("Please enter a valid budget amount.", "danger")
+            return redirect(url_for("settings"))
+
+        cursor.execute(
+            "UPDATE users SET budget = ? WHERE id = ?",
+            (budget, session["user_id"])
+        )
+        conn.commit()
+        conn.close()
+        flash("Budget updated successfully.", "success")
+        return redirect(url_for("home"))
+
+    cursor.execute("SELECT budget FROM users WHERE id = ?", (session["user_id"],))
+    row = cursor.fetchone()
+    conn.close()
+    current_budget = row[0] if row and row[0] else 0
+    return render_template("settings.html", current_budget=current_budget)
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
