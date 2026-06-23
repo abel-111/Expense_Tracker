@@ -43,6 +43,7 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Category-wise expense visualization
 - Automatic total expense calculation
 - Delete confirmation prompt before removing an expense
+- Monthly budget tracking with visual progress bar and overspend alerts
 
 ---
 
@@ -169,6 +170,7 @@ http://127.0.0.1:5000
 - Add Expense Form
 - Edit Expense Page
 - Expense List with Total Spending
+- Settings
 
 ---
 
@@ -195,7 +197,6 @@ Through this project I learned:
 - Expense search and filtering
 - CSV export functionality
 - User profile management
-- Budget tracking and alerts
 - Expanded automated test coverage (login failure, IDOR protection, edit/delete ownership checks)
 - Persistent database (PostgreSQL) so data survives free-tier restarts
 
