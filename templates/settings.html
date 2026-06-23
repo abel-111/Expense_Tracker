@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h1 class="mb-4">Settings</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Monthly Budget</h5>
+                <form method="POST" action="/settings">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label class="form-label">Budget Amount (₹)</label>
+                        <input type="number" name="budget" class="form-control"
+                               placeholder="e.g. 5000"
+                               value="{{ current_budget if current_budget else '' }}"
+                               step="0.01" min="0" required>
+                        <div class="form-text">This will be compared against your current month's expenses.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Budget</button>
+                    <a href="/" class="btn btn-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
