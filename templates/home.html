@@ -3,6 +3,40 @@
 {% block content %}
 <h1 class="mb-4">Welcome, {{ session.username }}</h1>
 
+{% if budget and budget > 0 %}
+{% set percent = ((monthly_total / budget) * 100) | round(1) %}
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="card-title mb-0">This Month's Budget</h5>
+            <a href="/settings" class="btn btn-sm btn-outline-secondary">Edit</a>
+        </div>
+        {% if percent >= 100 %}
+            <div class="alert alert-danger py-2 mb-2">⚠️ Over budget by ₹{{ (monthly_total - budget) | round(2) }}</div>
+        {% elif percent >= 80 %}
+            <div class="alert alert-warning py-2 mb-2">⚠️ Nearing your limit — ₹{{ (budget - monthly_total) | round(2) }} remaining</div>
+        {% endif %}
+        <div class="progress" style="height: 22px;">
+            <div class="progress-bar
+                {% if percent >= 100 %} bg-danger
+                {% elif percent >= 80 %} bg-warning
+                {% else %} bg-success
+                {% endif %}"
+                role="progressbar"
+                style="width: {{ [percent, 100] | min }}%;"
+                aria-valuenow="{{ percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100">
+                {{ percent }}%
+            </div>
+        </div>
+        <div class="mt-2 text-muted" style="font-size: 0.875rem;">
+            ₹{{ monthly_total | round(2) }} spent of ₹{{ budget | round(2) }} budget this month
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="card mb-4">
     <div class="card-body">
         <h5 class="card-title">Add Expense</h5>
