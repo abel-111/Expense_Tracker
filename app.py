@@ -245,6 +245,43 @@ def settings():
     conn.close()
     current_budget = row[0] if row and row[0] else 0
     return render_template("settings.html", current_budget=current_budget)
+@app.route("/report")
+def report():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    from datetime import date
+    selected_month = request.args.get("month", date.today().strftime("%Y-%m"))
+
+    conn = sqlite3.connect("expenses.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """SELECT id, category, amount, date FROM expenses
+           WHERE user_id = ? AND strftime('%Y-%m', date) = ?
+           ORDER BY date DESC, id DESC""",
+        (session["user_id"], selected_month)
+    )
+    expenses = cursor.fetchall()
+
+    cursor.execute(
+        """SELECT category, SUM(amount) FROM expenses
+           WHERE user_id = ? AND strftime('%Y-%m', date) = ?
+           GROUP BY category ORDER BY SUM(amount) DESC""",
+        (session["user_id"], selected_month)
+    )
+    category_totals = cursor.fetchall()
+    conn.close()
+
+    monthly_total = sum(e[2] for e in expenses)
+
+    return render_template(
+        "report.html",
+        selected_month=selected_month,
+        expenses=expenses,
+        category_totals=category_totals,
+        monthly_total=monthly_total
+    )
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
