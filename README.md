@@ -44,7 +44,9 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Automatic total expense calculation
 - Delete confirmation prompt before removing an expense
 - Monthly budget tracking with visual progress bar and overspend alerts
-
+- Monthly expense reporting
+- Monthly category-wise spending breakdown
+- Doughnut chart visualization for monthly reports
 ---
 
 ## Technologies Used
@@ -170,7 +172,9 @@ http://127.0.0.1:5000
 - Add Expense Form
 - Edit Expense Page
 - Expense List with Total Spending
-- Settings
+- Settings Page
+- Monthly Report Page
+- Category Breakdown Chart
 
 ---
 
@@ -188,12 +192,16 @@ Through this project I learned:
 - Form Handling
 - Input Validation
 - Database Relationships
+- Flask Flash Messages
+- CSRF Protection
+- Environment Variables using python-dotenv
+- Chart.js Integration
+- Monthly Expense Reporting
 
 ---
 
 ## Future Improvements
 
-- Monthly expense reports
 - Expense search and filtering
 - CSV export functionality
 - User profile management
