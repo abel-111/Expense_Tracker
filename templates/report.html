@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Monthly Report{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Monthly Report</h1>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="/report" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Select Month</label>
+                <input type="month" name="month" class="form-control" value="{{ selected_month }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">View</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if expenses %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Summary</h5>
+        <p class="mb-1">Total spent in <strong>{{ selected_month }}</strong>: <strong>₹{{ monthly_total | round(2) }}</strong></p>
+        <p class="mb-0">Number of expenses: <strong>{{ expenses | length }}</strong></p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Spending by Category</h5>
+        <canvas id="reportChart" style="max-height: 300px;"></canvas>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Category Breakdown</h5>
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Total</th>
+                    <th>% of Month</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category, amount in category_totals %}
+                <tr>
+                    <td>{{ category }}</td>
+                    <td>₹{{ amount | round(2) }}</td>
+                    <td>{{ ((amount / monthly_total) * 100) | round(1) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">All Expenses</h5>
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense[1] }}</td>
+                    <td>₹{{ expense[2] }}</td>
+                    <td>{{ expense[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info">No expenses found for {{ selected_month }}.</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% if expenses %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('reportChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ category_totals | map(attribute=0) | list | tojson }},
+            datasets: [{
+                data: {{ category_totals | map(attribute=1) | list | tojson }},
+                backgroundColor: ['#0d6efd', '#6610f2', '#198754', '#fd7e14', '#dc3545', '#20c997', '#6f42c1', '#ffc107']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
