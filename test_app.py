@@ -32,3 +32,18 @@ def test_register_then_duplicate_fails(client):
     conn.execute("DELETE FROM users WHERE username = 'alice'")
     conn.commit()
     conn.close()
+def test_login_failure(client):
+    # first register a user
+    client.post("/register", data={"username": "bob", "password": "correct"})
+
+    # try logging in with the wrong password
+    response = client.post("/login", data={"username": "bob", "password": "wrong"})
+
+    assert response.status_code == 200
+    assert b"Invalid username or password" in response.data
+
+    # cleanup
+    conn = sqlite3.connect("expenses.db")
+    conn.execute("DELETE FROM users WHERE username = 'bob'")
+    conn.commit()
+    conn.close()
