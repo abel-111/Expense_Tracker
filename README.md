@@ -115,6 +115,9 @@ python -m pytest test_app.py -v
 Current coverage:
 - Login page loads correctly
 - Duplicate username registration is rejected
+- Login failure returns error message
+- IDOR protection on delete (user cannot delete another user's expense)
+- IDOR protection on edit (user cannot overwrite another user's expense)
 
 ## Installation
 
