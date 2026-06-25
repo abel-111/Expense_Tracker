@@ -47,3 +47,38 @@ def test_login_failure(client):
     conn.execute("DELETE FROM users WHERE username = 'bob'")
     conn.commit()
     conn.close()
+def test_idor_delete_protection(client):
+    # register and login as user A
+    client.post("/register", data={"username": "userA", "password": "passA"})
+    client.post("/login", data={"username": "userA", "password": "passA"})
+
+    # add an expense as user A
+    client.post("/add", data={"category": "Food", "amount": "100", "date": "2024-01-01"})
+
+    # get the expense ID
+    conn = sqlite3.connect("expenses.db")
+    row = conn.execute("SELECT id FROM expenses WHERE category = 'Food' AND amount = 100").fetchone()
+    expense_id = row[0]
+    conn.close()
+
+    # logout and login as user B
+    client.get("/logout")
+    client.post("/register", data={"username": "userB", "password": "passB"})
+    client.post("/login", data={"username": "userB", "password": "passB"})
+
+    # user B tries to delete user A's expense
+    client.post(f"/delete/{expense_id}")
+
+    # expense should still exist
+    conn = sqlite3.connect("expenses.db")
+    row = conn.execute("SELECT id FROM expenses WHERE id = ?", (expense_id,)).fetchone()
+    conn.close()
+
+    assert row is not None  # delete was blocked
+
+    # cleanup
+    conn = sqlite3.connect("expenses.db")
+    conn.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
+    conn.execute("DELETE FROM users WHERE username IN ('userA', 'userB')")
+    conn.commit()
+    conn.close()
