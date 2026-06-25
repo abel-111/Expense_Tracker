@@ -77,7 +77,9 @@ expense-tracker/
     ├── home.html
     ├── login.html
     ├── register.html
-    └── edit.html
+    ├── edit.html
+    ├── settings.html
+    └── report.html
 ```
 
 ---
