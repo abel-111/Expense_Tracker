@@ -18,6 +18,10 @@
                 <label for="date" class="form-label">Date</label>
                 <input type="date" id="date" name="date" value="{{ expense[3] }}" class="form-control">
             </div>
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notes (optional)</label>
+                <input type="text" id="notes" name="notes" value="{{ expense[4] }}" class="form-control">
+            </div>
             <button type="submit" class="btn btn-primary">Update</button>
             <a href="/" class="btn btn-secondary">Cancel</a>
         </form>
