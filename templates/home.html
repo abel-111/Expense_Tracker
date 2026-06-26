@@ -51,6 +51,9 @@
             <div class="col-md-3">
                 <input type="date" name="date" class="form-control">
             </div>
+            <div class="col-md-3">
+                <input type="text" name="notes" class="form-control" placeholder="Notes (optional)">
+            </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">Add</button>
             </div>
@@ -76,6 +79,7 @@
             <th>Category</th>
             <th>Amount</th>
             <th>Date</th>
+            <th>Notes</th>
             <th></th>
         </tr>
     </thead>
@@ -85,6 +89,7 @@
             <td>{{ expense[1] }}</td>
             <td>₹{{ expense[2] }}</td>
             <td>{{ expense[3] }}</td>
+            <td>{{ expense[4] }}</td>
             <td>
                 <a href="/edit/{{ expense[0] }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                 <form method="POST" action="/delete/{{ expense[0] }}" class="d-inline" onsubmit="return confirm('Delete this expense?');">
