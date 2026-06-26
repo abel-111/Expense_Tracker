@@ -34,6 +34,11 @@ def init_db():
     except sqlite3.OperationalError:
         pass
 
+    try:
+        cursor.execute("ALTER TABLE expenses ADD COLUMN notes TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
+
     conn.commit()
     conn.close()
 
@@ -45,7 +50,7 @@ def home():
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT id, category, amount, date FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
+        "SELECT id, category, amount, date, notes FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
         (session["user_id"],)
     )
     expenses = cursor.fetchall()
@@ -113,6 +118,7 @@ def add_expense():
     category = request.form["category"]
     amount = request.form["amount"]
     date = request.form["date"]
+    notes = request.form.get("notes", "")
 
     try:
         amount = float(amount)
@@ -126,7 +132,7 @@ def add_expense():
 
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO expenses (user_id, category, amount, date) VALUES (?, ?, ?, ?)", (session["user_id"], category, amount, date))
+    cursor.execute("INSERT INTO expenses (user_id, category, amount, date, notes) VALUES (?, ?, ?, ?, ?)", (session["user_id"], category, amount, date, notes))
     conn.commit()
     conn.close()
     return redirect(url_for("home"))
@@ -169,6 +175,7 @@ def edit_expense(id):
         category = request.form["category"]
         amount = request.form["amount"]
         date = request.form["date"]
+        notes = request.form.get("notes", "")
 
         try:
             amount = float(amount)
@@ -183,8 +190,8 @@ def edit_expense(id):
             return redirect(url_for("home"))
 
         cursor.execute(
-            "UPDATE expenses SET category = ?, amount = ?, date = ? WHERE id = ? AND user_id = ?",
-            (category, amount, date, id, session["user_id"])
+            "UPDATE expenses SET category = ?, amount = ?, date = ?, notes = ? WHERE id = ? AND user_id = ?",
+            (category, amount, date, notes, id, session["user_id"])
         )
         conn.commit()
         conn.close()
@@ -192,7 +199,7 @@ def edit_expense(id):
 
     # GET — fetch the expense and show the form
     cursor.execute(
-        "SELECT id, category, amount, date FROM expenses WHERE id = ? AND user_id = ?",
+        "SELECT id, category, amount, date, notes FROM expenses WHERE id = ? AND user_id = ?",
         (id, session["user_id"])
     )
     expense = cursor.fetchone()
@@ -259,11 +266,12 @@ def report():
     cursor = conn.cursor()
 
     cursor.execute(
-        """SELECT id, category, amount, date FROM expenses
+        """SELECT id, category, amount, date, notes FROM expenses
            WHERE user_id = ? AND strftime('%Y-%m', date) = ?
            ORDER BY date DESC, id DESC""",
         (session["user_id"], selected_month)
     )
+    
     expenses = cursor.fetchall()
 
     cursor.execute(
