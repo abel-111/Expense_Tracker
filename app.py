@@ -292,6 +292,34 @@ def report():
         category_totals=category_totals,
         monthly_total=monthly_total
     )
+@app.route("/export/csv")
+def export_csv():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    import csv
+    import io
+    from flask import Response
+
+    conn = sqlite3.connect("expenses.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT category, amount, date, notes FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
+        (session["user_id"],)
+    )
+    expenses = cursor.fetchall()
+    conn.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Category", "Amount", "Date", "Notes"])
+    writer.writerows(expenses)
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=expenses.csv"}
+    )
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
