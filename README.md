@@ -47,6 +47,8 @@ A simple Expense Tracker web application built using Python, Flask, SQLite, and 
 - Monthly expense reporting
 - Monthly category-wise spending breakdown
 - Doughnut chart visualization for monthly reports
+- Search and filter expenses by category and date range
+- CSV export for downloading all expenses
 ---
 
 ## Technologies Used
@@ -207,8 +209,6 @@ Through this project I learned:
 
 ## Future Improvements
 
-- Expense search and filtering
-- CSV export functionality
 - User profile management
 - Expanded automated test coverage (login failure, IDOR protection, edit/delete ownership checks)
 - Persistent database (PostgreSQL) so data survives free-tier restarts
