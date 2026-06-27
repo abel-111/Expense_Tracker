@@ -47,12 +47,31 @@ init_db()
 def home():
     if "user_id" not in session:
         return redirect(url_for("login"))
+
+    category_filter = request.args.get("category", "").strip()
+    start_date = request.args.get("start_date", "").strip()
+    end_date = request.args.get("end_date", "").strip()
+
+    query = "SELECT id, category, amount, date, notes FROM expenses WHERE user_id = ?"
+    params = [session["user_id"]]
+
+    if category_filter:
+        query += " AND LOWER(category) LIKE LOWER(?)"
+        params.append(f"%{category_filter}%")
+
+    if start_date:
+        query += " AND date >= ?"
+        params.append(start_date)
+
+    if end_date:
+        query += " AND date <= ?"
+        params.append(end_date)
+
+    query += " ORDER BY date DESC, id DESC"
+
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute(
-        "SELECT id, category, amount, date, notes FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
-        (session["user_id"],)
-    )
+    cursor.execute(query, params)
     expenses = cursor.fetchall()
     total = sum(expense[2] for expense in expenses)
 
@@ -61,7 +80,7 @@ def home():
         (session["user_id"],)
     )
     category_totals = cursor.fetchall()
-    
+
     cursor.execute(
         """SELECT SUM(amount) FROM expenses
         WHERE user_id = ? AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')""",
@@ -74,18 +93,22 @@ def home():
     budget_row = cursor.fetchone()
     budget = budget_row[0] if budget_row and budget_row[0] else 0
     conn.close()
+
     chart_labels = [row[0] for row in category_totals]
     chart_values = [row[1] for row in category_totals]
 
     return render_template(
-    "home.html",
-    username=session["username"],
-    expenses=expenses,
-    total=total,
-    chart_labels=chart_labels,
-    chart_values=chart_values,
-    monthly_total=monthly_total,
-    budget=budget
+        "home.html",
+        username=session["username"],
+        expenses=expenses,
+        total=total,
+        chart_labels=chart_labels,
+        chart_values=chart_values,
+        monthly_total=monthly_total,
+        budget=budget,
+        category_filter=category_filter,
+        start_date=start_date,
+        end_date=end_date
     )
 @app.route("/login", methods=["GET", "POST"])
 def login():
